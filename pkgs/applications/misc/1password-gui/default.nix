@@ -7,7 +7,6 @@
 , polkitPolicyOwners ? [ ] }:
 
 let
-
   pname = "1password";
   version = if channel == "stable" then "8.10.33" else "8.10.34-10.BETA";
 
@@ -54,12 +53,13 @@ let
     inherit (sources.${channel}.${stdenv.system} or (throw "unsupported system ${stdenv.hostPlatform.system}")) url hash;
   };
 
-  meta = with lib; {
+  meta = {
+    broken = stdenv.isDarwin;
     description = "Multi-platform password manager";
     homepage = "https://1password.com/";
-    sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-    license = licenses.unfree;
-    maintainers = with maintainers; [ timstott savannidgerinel sebtm ];
+    sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
+    license = lib.licenses.unfree;
+    maintainers = with lib.maintainers; [ timstott savannidgerinel sebtm ];
     platforms = builtins.attrNames sources.${channel};
     mainProgram = "1password";
   };
